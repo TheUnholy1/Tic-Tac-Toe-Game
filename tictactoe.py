@@ -26,30 +26,30 @@ def print_board():
 
 def check_win():
     """This is a function to check if there is a winner."""
-    global winner
+    global GAME_WINNER
     if board[0] == board[1] == board[2] and board[0] != ' ':
-        winner = board[0]
+        GAME_WINNER = board[0]
         return True
     elif board[3] == board[4] == board[5] and board[3] != ' ':
-        winner = board[3]
+        GAME_WINNER = board[3]
         return True
     elif board[6] == board[7] == board[8] and board[6] != ' ':
-        winner = board[6]
+        GAME_WINNER = board[6]
         return True
     elif board[0] == board[3] == board[6] and board[0] != ' ':
-        winner = board[0]
+        GAME_WINNER = board[0]
         return True
     elif board[1] == board[4] == board[7] and board[1] != ' ':
-        winner = board[1]
+        GAME_WINNER = board[1]
         return True
     elif board[2] == board[5] == board[8] and board[2] != ' ':
-        winner = board[2]
+        GAME_WINNER = board[2]
         return True
     elif board[0] == board[4] == board[8] and board[0] != ' ':
-        winner = board[0]
+        GAME_WINNER = board[0]
         return True
     elif board[2] == board[4] == board[6] and board[2] != ' ':
-        winner = board[2]
+        GAME_WINNER = board[2]
         return True 
     else:
         return False
@@ -72,20 +72,23 @@ def switch_player():
         CURRENT_PLAYER = 'X'   
 def player_input():
     """Function to take player input"""
-    global GAME_RUNNING
     global CURRENT_PLAYER
-    attack = int(input("Enter your move (1-9): "))
+    try:
+        attack = int(input("Enter your move (1-9, 0 to quit): "))
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+        return False
     if attack == 0:
-        return True
-    if attack >=1 and attack <=9 and board[attack-1] == ' ':
+        return True # Exit condition
+    if 1 <= attack <= 9 and board[attack-1] == ' ':
         board[attack-1] = CURRENT_PLAYER
         if CURRENT_PLAYER == 'X':
             CURRENT_PLAYER = 'O'
             computer_move()
-        else:
             CURRENT_PLAYER = 'X'
     else:
         print("Invalid move. Try again.")
+    return False
 while GAME_RUNNING:
     print_board()
     EXIT_CONDITION = player_input()
@@ -94,7 +97,7 @@ while GAME_RUNNING:
         GAME_RUNNING = False
     if check_win():
         clear_console()
-        print(f"Player {CURRENT_PLAYER} wins!")
+        print(f"Player {GAME_WINNER} wins!")
         print_board()
         GAME_RUNNING = False
     if ' ' not in board:
