@@ -1,6 +1,11 @@
+"""This is a simple Tic Tac Toe game where a player plays against the computer."""
 import os
-player = 'X'
-winner = None
+import random
+
+CURRENT_PLAYER = 'X'
+GAME_WINNER = None
+GAME_RUNNING = True
+board = [' ' for x in range(9)]
 
 def clear_console():
     """Clears the console screen."""
@@ -10,9 +15,8 @@ def clear_console():
     else:  # For macOS and Linux
         os.system('clear')
 
-board = [' ' for x in range(9)]
-
 def print_board():
+    """Function printing the game board"""
     print(f"{board[0]} | {board[1]} | {board[2]}")
     print("---------")
     print(f"{board[3]} | {board[4]} | {board[5]}")
@@ -21,6 +25,7 @@ def print_board():
     
 
 def check_win():
+    """This is a function to check if there is a winner."""
     global winner
     if board[0] == board[1] == board[2] and board[0] != ' ':
         winner = board[0]
@@ -49,33 +54,51 @@ def check_win():
     else:
         return False
 
+def computer_move():
+    """Function for the computer to make a move."""
+    while CURRENT_PLAYER == 'O':
+        position = random.randint(0, 8)
+        if board[position] == ' ':
+            board[position] = 'O'
+        switch_player()
+        break
 
-
-while True:
-    # clear_console()
-    print_board()
+def switch_player():
+    """Function to switch the current player."""
+    global CURRENT_PLAYER
+    if CURRENT_PLAYER == 'X':
+        CURRENT_PLAYER = 'O'
+    else:
+        CURRENT_PLAYER = 'X'   
+def player_input():
+    """Function to take player input"""
+    global GAME_RUNNING
+    global CURRENT_PLAYER
     attack = int(input("Enter your move (1-9): "))
     if attack == 0:
-        print("Game exited.")
-        break
+        return True
     if attack >=1 and attack <=9 and board[attack-1] == ' ':
-        board[attack-1] = player
-        if player == 'X':
-            player = 'O'
+        board[attack-1] = CURRENT_PLAYER
+        if CURRENT_PLAYER == 'X':
+            CURRENT_PLAYER = 'O'
+            computer_move()
         else:
-            player = 'X'
+            CURRENT_PLAYER = 'X'
     else:
-        clear_console()
         print("Invalid move. Try again.")
+while GAME_RUNNING:
+    print_board()
+    EXIT_CONDITION = player_input()
+    if EXIT_CONDITION:
+        print('Game Over. Exiting...')
+        GAME_RUNNING = False
     if check_win():
         clear_console()
-        print(f"Player {winner} wins!")
+        print(f"Player {CURRENT_PLAYER} wins!")
         print_board()
-        break
+        GAME_RUNNING = False
     if ' ' not in board:
         clear_console()
         print("It's a tie!")
         print_board()
-        break
-    
-print("Game over.")
+        GAME_RUNNING = False
