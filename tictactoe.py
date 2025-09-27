@@ -1,5 +1,14 @@
+import os
 player = 'X'
 winner = None
+
+def clear_console():
+    """Clears the console screen."""
+    # Check the operating system
+    if os.name == 'nt':  # For Windows
+        os.system('cls')
+    else:  # For macOS and Linux
+        os.system('clear')
 
 board = [' ' for x in range(9)]
 
@@ -43,6 +52,7 @@ def check_win():
 
 
 while True:
+    # clear_console()
     print_board()
     attack = int(input("Enter your move (1-9): "))
     if attack == 0:
@@ -55,12 +65,15 @@ while True:
         else:
             player = 'X'
     else:
+        clear_console()
         print("Invalid move. Try again.")
     if check_win():
+        clear_console()
         print(f"Player {winner} wins!")
         print_board()
         break
     if ' ' not in board:
+        clear_console()
         print("It's a tie!")
         print_board()
         break
